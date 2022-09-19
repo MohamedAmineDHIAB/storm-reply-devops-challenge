@@ -1,0 +1,38 @@
+# Creating a new namespace for QA
+apiVersion: v1
+kind: Namespace
+metadata:
+    name: qa
+    labels:
+        name: qa
+---
+# Creating a k8s cronjob in order to save a file in the s3 bucket every 5 minutes
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+    namespace: qa
+    name: qa-mohamed-cronjob
+spec:
+    schedule: "*/5 * * * *"
+    # remove the next line if you dont want to delete the finished pods
+    successfulJobsHistoryLimit: 0
+    concurrencyPolicy: Forbid
+    jobTemplate:
+        spec:
+            template:
+                metadata:
+                    labels:
+                        app: mohamed-qa-app
+                spec:
+                    containers:
+                        - name: mohamed-qa-container
+                          image: aminedhiab/reply-challenge:v1.0.6
+                          env:
+                              # provide AWS credentials and S3 bucket name here
+                              - name: ACCESS_KEY_ID
+                                value: "?"
+                              - name: SECRET_ACCESS_KEY
+                                value: "?"
+                              - name: BUCKET_NAME
+                                value: "qa-mohamed-dhiab-stormreply-platform-challenge"
+                    restartPolicy: Never

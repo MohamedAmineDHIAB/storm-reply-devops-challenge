@@ -1,0 +1,6 @@
+qa.env
+staging.env
+s3/.terraform*
+s3/terraform*
+.vscode
+app/node_modules
